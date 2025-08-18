@@ -38,7 +38,7 @@ export default function Task(props){
                     </svg>
                 </div>
                 <div className="actions">
-                    <img className="edit" src="../src/assets/edit.png" alt="" />
+                    <img className="edit" src="../src/assets/edit.png" alt="" onClick={props.onEdit} />
                     <img src="../src/assets/delete.png" alt="" />
                 </div>
             </div>

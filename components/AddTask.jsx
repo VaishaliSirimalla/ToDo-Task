@@ -1,30 +1,51 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../src/css/AddTask.css';
 
-export default function AddTask({ modalOpen, handleClose, setTodoList }) {
+export default function AddTask({ modalOpen, handleClose, setTodoList,editTask }) {
   const [priority, setPriority] = useState("Low"); 
+  const [title, setTitle] = useState("")
+
+   useEffect(() => {
+    if (editTask) {
+      setPriority(editTask.priority);
+      setTitle(editTask.title);
+    } else {
+      setPriority("Low");
+      setTitle("");
+    }
+  }, [editTask]);
 
   if (!modalOpen) return null;
 
   function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const title = formData.get("task");
+    // const formData = new FormData(event.currentTarget);
+    // const title = formData.get("task");
 
     if (!title.trim()) return;
 
-    setTodoList(prevTodo => [
-      {
-        id: prevTodo.length+1, 
-        title, 
-        priority, 
-        status: "To Do", 
-        completed: false
-      },...prevTodo
-    ]);
+    if (editTask) {
+      // Update existing task
+      setTodoList(prevTodo =>
+        prevTodo.map(task =>
+          task.id === editTask.id ? { ...task, title, priority } : task
+        )
+      );
+    } else {
+      // Add new task
+      setTodoList(prevTodo => [
+        {
+          id: Date.now(),
+          title,
+          priority,
+          status: "To Do",
+          completed: false
+        },
+        ...prevTodo
+      ]);
+    }
 
-    handleClose(); 
-    setPriority("Low"); 
+    handleClose();
   }
 
   return (
@@ -33,7 +54,7 @@ export default function AddTask({ modalOpen, handleClose, setTodoList }) {
         <form onSubmit={handleSubmit}>
           <div className="add-task">
             <div className="add-task-title">
-              <span>Add Task</span>
+              <span>{editTask?"Edit Task":"Add Task"}</span>
               <img 
                 onClick={handleClose} 
                 src="../src/assets/close.png" 
@@ -47,6 +68,8 @@ export default function AddTask({ modalOpen, handleClose, setTodoList }) {
                 name="task"
                 placeholder="Type your task here..." 
                 type="text" 
+                value={title}
+                onChange={(e)=> setTitle(e.target.value)}
               />
             </div>
 
@@ -66,7 +89,7 @@ export default function AddTask({ modalOpen, handleClose, setTodoList }) {
             </div>
 
             <div className="add-task-button">
-              <button type="submit">Add</button>
+              <button type="submit">{editTask?"Update":"Add"}</button>
             </div>
           </div>
         </form>
