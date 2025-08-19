@@ -20,11 +20,16 @@ function App() {
     setModalOpen(true)
   }
 
+  const handleDelete = (id) => {
+    setTodoList((prev) => prev.filter((task) => task.id !== id));
+  };
+
   const eachTask = todoList.map((todo) => (
     <Task 
       key={todo.id}
       {...todo}
-      onEdit={() => handleOpen(todo)}   // click edit
+      onEdit={() => handleOpen(todo)} 
+      onDelete={() => handleDelete(todo.id)}
     />
   ))
 

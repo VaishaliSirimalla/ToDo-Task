@@ -39,7 +39,7 @@ export default function Task(props){
                 </div>
                 <div className="actions">
                     <img className="edit" src="../src/assets/edit.png" alt="" onClick={props.onEdit} />
-                    <img src="../src/assets/delete.png" alt="" />
+                    <img src="../src/assets/delete.png" alt="" onClick={props.onDelete}/>
                 </div>
             </div>
         </>
